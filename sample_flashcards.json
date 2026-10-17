@@ -3,8 +3,8 @@
   "difficulty": "Mixed",
   "flashcards": [
     {
-      "question": "According to the source, what does the text explain about CELL: THE UNIT OF?",
-      "answer": "CELL: THE UNIT OF LIFE\n97\nmembrane-bound structure with the outer membrane and the inner\nmembrane dividing its lumen distinctly into two aqueous compartments,\ni.e., the outer compartment and the inner compartment.",
+      "question": "What is the primary function of mitochondria in eukaryotic cells?",
+      "answer": "Mitochondria are the sites of aerobic respiration and produce cellular energy in the form of ATP, earning them the name \u2018power houses\u2019 of the cell.",
       "difficulty": "Easy",
       "topic": "Cell Structure and Mitochondria",
       "source": "unit3.pdf (Page 13)",
@@ -13,9 +13,19 @@
       ]
     },
     {
-      "question": "According to the source, what does the text explain about The endomembrane system include?",
-      "answer": "The\nendomembrane system include endoplasmic\nreticulum (ER), golgi complex, lysosomes and\nvacuoles.",
+      "question": "Describe the main structural components of a mitochondrion and their roles.",
+      "answer": "A mitochondrion has an outer membrane that forms the continuous limiting boundary, an inner membrane that folds into cristae to increase surface area, and a matrix filled with a dense homogeneous substance containing enzymes, a circular DNA molecule, RNA, and 70S ribosomes for protein synthesis.",
       "difficulty": "Medium",
+      "topic": "Cell Structure and Mitochondria",
+      "source": "unit3.pdf (Page 13)",
+      "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p13_c1"
+      ]
+    },
+    {
+      "question": "Why are mitochondria excluded from the endomembrane system in eukaryotic cells?",
+      "answer": "Mitochondria are not part of the endomembrane system because their functions are not coordinated with the endomembrane components (ER, Golgi complex, lysosomes, vacuoles); they operate independently of that system.",
+      "difficulty": "Hard",
       "topic": "Cell Structure and Mitochondria",
       "source": "unit3.pdf (Page 11)",
       "source_chunk_ids": [
@@ -23,23 +33,14 @@
       ]
     },
     {
-      "question": "According to the source, what does the text explain about Various chemical reactions occur?",
-      "answer": "Various\nchemical reactions occur in it to keep the cell in the \u2018living state\u2019.",
-      "difficulty": "Hard",
+      "question": "What type of ribosomes are found in the mitochondrial matrix, and what is their significance?",
+      "answer": "The mitochondrial matrix contains 70S ribosomes, which enable the organelle to synthesize its own proteins required for mitochondrial function.",
+      "difficulty": "Medium",
       "topic": "Cell Structure and Mitochondria",
-      "source": "unit3.pdf (Page 4)",
+      "source": "unit3.pdf (Page 13)",
       "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p13_c1",
         "unit3_6771c5ae1d64_p4_c3"
-      ]
-    },
-    {
-      "question": "According to the source, what does the text explain about In animal cells, centrioles?",
-      "answer": "In animal cells,\ncentrioles also form spindle apparatus during cell division.",
-      "difficulty": "Easy",
-      "topic": "Cell Structure and Mitochondria",
-      "source": "unit3.pdf (Page 18)",
-      "source_chunk_ids": [
-        "unit3_6771c5ae1d64_p18_c2"
       ]
     }
   ],
@@ -51,17 +52,17 @@
       "unit3_6771c5ae1d64_p4_c3",
       "unit3_6771c5ae1d64_p18_c2"
     ],
-    "llm_provider": "MockLLMClient",
+    "llm_provider": "GroqLLMClient",
     "relevance_report": {
       "is_relevant": true,
-      "average_relevance": 0.631,
+      "average_relevance": 0.824,
       "grounded_count": 4,
       "total_cards": 4,
       "scores": [
-        0.741,
-        0.611,
-        0.562,
-        0.611
+        0.826,
+        0.85,
+        0.846,
+        0.773
       ]
     },
     "source_documents": [

@@ -65,15 +65,15 @@ class BaseLLMClient(ABC):
 
 class GroqLLMClient(BaseLLMClient):
     """
-    Client for Groq's ultra-fast LPU inference (Llama-3.3-70b, Llama-3.1-8b).
+    Client for Groq's ultra-fast LPU inference (openai/gpt-oss-120b, qwen/qwen3.8-27b).
     Uses the OpenAI-compatible Groq API endpoint.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "llama-3.3-70b-versatile"):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         self.api_key = api_key or os.getenv("GROQ_API_KEY")
         if not self.api_key:
             raise ValueError("Groq API key not found. Set GROQ_API_KEY in your environment or .env file.")
-        self.model_name = model
+        self.model_name = model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b"
         try:
             from openai import OpenAI
             self.client = OpenAI(
@@ -104,11 +104,11 @@ class OpenRouterLLMClient(BaseLLMClient):
     Uses the OpenAI-compatible OpenRouter API endpoint.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "meta-llama/llama-3.3-70b-instruct"):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         if not self.api_key:
             raise ValueError("OpenRouter API key not found. Set OPENROUTER_API_KEY in your environment or .env file.")
-        self.model_name = model
+        self.model_name = model or os.getenv("OPENROUTER_MODEL") or "meta-llama/llama-3.3-70b-instruct"
         try:
             from openai import OpenAI
             self.client = OpenAI(
@@ -128,6 +128,7 @@ class OpenRouterLLMClient(BaseLLMClient):
             model=self.model_name,
             messages=messages,
             temperature=0.3,
+            max_tokens=2000,
             response_format={"type": "json_object"},
         )
         return response.choices[0].message.content or "{}"
@@ -319,10 +320,10 @@ def get_llm_client(
     provider_str = (provider or "").strip().lower()
 
     if provider_str == "groq":
-        return GroqLLMClient(api_key=api_key, model=model or "llama-3.3-70b-versatile")
+        return GroqLLMClient(api_key=api_key, model=model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b")
 
     if provider_str in ("openrouter", "open_router"):
-        return OpenRouterLLMClient(api_key=api_key, model=model or "meta-llama/llama-3.3-70b-instruct")
+        return OpenRouterLLMClient(api_key=api_key, model=model or os.getenv("OPENROUTER_MODEL") or "meta-llama/llama-3.3-70b-instruct")
 
     if provider_str in ("gemini", "google"):
         return GeminiLLMClient(api_key=api_key, model=model or "gemini-2.5-flash")
@@ -337,7 +338,7 @@ def get_llm_client(
     groq_key = api_key or os.getenv("GROQ_API_KEY")
     if groq_key:
         try:
-            return GroqLLMClient(api_key=groq_key, model=model or "llama-3.3-70b-versatile")
+            return GroqLLMClient(api_key=groq_key, model=model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b")
         except Exception as e:
             logger.warning("Failed to initialize Groq client: %s.", e)
 
