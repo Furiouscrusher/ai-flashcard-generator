@@ -1,7 +1,7 @@
 """
 llm_client.py
 
-LLM integration client supporting Google Gemini, OpenAI, and a Mock provider.
+LLM integration client supporting Groq, OpenRouter, Google Gemini, OpenAI, and a Mock provider.
 Handles API authentication, prompt execution, error recovery, and JSON extraction.
 """
 
@@ -61,6 +61,77 @@ class BaseLLMClient(ABC):
     def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
         """Generate raw text response from the model."""
         pass
+
+
+class GroqLLMClient(BaseLLMClient):
+    """
+    Client for Groq's ultra-fast LPU inference (openai/gpt-oss-120b, qwen/qwen3.8-27b).
+    Uses the OpenAI-compatible Groq API endpoint.
+    """
+
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
+        self.api_key = api_key or os.getenv("GROQ_API_KEY")
+        if not self.api_key:
+            raise ValueError("Groq API key not found. Set GROQ_API_KEY in your environment or .env file.")
+        self.model_name = model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b"
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url="https://api.groq.com/openai/v1",
+            )
+        except ImportError as exc:
+            raise ImportError("openai package is required for Groq client.") from exc
+
+    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            temperature=0.3,
+            response_format={"type": "json_object"},
+        )
+        return response.choices[0].message.content or "{}"
+
+
+class OpenRouterLLMClient(BaseLLMClient):
+    """
+    Client for OpenRouter unified API (access to DeepSeek, Llama, Claude, etc.).
+    Uses the OpenAI-compatible OpenRouter API endpoint.
+    """
+
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
+        if not self.api_key:
+            raise ValueError("OpenRouter API key not found. Set OPENROUTER_API_KEY in your environment or .env file.")
+        self.model_name = model or os.getenv("OPENROUTER_MODEL") or "meta-llama/llama-3.3-70b-instruct"
+        try:
+            from openai import OpenAI
+            self.client = OpenAI(
+                api_key=self.api_key,
+                base_url="https://openrouter.ai/api/v1",
+            )
+        except ImportError as exc:
+            raise ImportError("openai package is required for OpenRouter client.") from exc
+
+    def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            temperature=0.3,
+            max_tokens=2000,
+            response_format={"type": "json_object"},
+        )
+        return response.choices[0].message.content or "{}"
 
 
 class GeminiLLMClient(BaseLLMClient):
@@ -237,12 +308,22 @@ def get_llm_client(
     """
     Factory to return an appropriate LLM client.
 
+    Supports: 'groq', 'openrouter', 'gemini', 'openai', and 'mock'.
+
     If provider is not explicitly set, auto-detects from available environment variables:
-    1. GEMINI_API_KEY / GOOGLE_API_KEY -> GeminiLLMClient
-    2. OPENAI_API_KEY -> OpenAILLMClient
-    3. None -> MockLLMClient (logs informational notice)
+    1. GROQ_API_KEY -> GroqLLMClient (blazing fast Llama-3.3-70b)
+    2. OPENROUTER_API_KEY -> OpenRouterLLMClient
+    3. GEMINI_API_KEY / GOOGLE_API_KEY -> GeminiLLMClient
+    4. OPENAI_API_KEY -> OpenAILLMClient
+    5. None -> MockLLMClient (offline rule-based synthesis)
     """
     provider_str = (provider or "").strip().lower()
+
+    if provider_str == "groq":
+        return GroqLLMClient(api_key=api_key, model=model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b")
+
+    if provider_str in ("openrouter", "open_router"):
+        return OpenRouterLLMClient(api_key=api_key, model=model or os.getenv("OPENROUTER_MODEL") or "meta-llama/llama-3.3-70b-instruct")
 
     if provider_str in ("gemini", "google"):
         return GeminiLLMClient(api_key=api_key, model=model or "gemini-2.5-flash")
@@ -253,20 +334,34 @@ def get_llm_client(
     if provider_str == "mock":
         return MockLLMClient()
 
-    # Auto-detection
+    # Auto-detection by available environment variables:
+    groq_key = api_key or os.getenv("GROQ_API_KEY")
+    if groq_key:
+        try:
+            return GroqLLMClient(api_key=groq_key, model=model or os.getenv("GROQ_MODEL") or "openai/gpt-oss-120b")
+        except Exception as e:
+            logger.warning("Failed to initialize Groq client: %s.", e)
+
+    openrouter_key = api_key or os.getenv("OPENROUTER_API_KEY")
+    if openrouter_key:
+        try:
+            return OpenRouterLLMClient(api_key=openrouter_key, model=model or "meta-llama/llama-3.3-70b-instruct")
+        except Exception as e:
+            logger.warning("Failed to initialize OpenRouter client: %s.", e)
+
     gemini_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if gemini_key:
         try:
             return GeminiLLMClient(api_key=gemini_key, model=model or "gemini-2.5-flash")
         except Exception as e:
-            logger.warning("Failed to initialize Gemini client: %s. Falling back to Mock.", e)
+            logger.warning("Failed to initialize Gemini client: %s.", e)
 
     openai_key = api_key or os.getenv("OPENAI_API_KEY")
     if openai_key:
         try:
             return OpenAILLMClient(api_key=openai_key, model=model or "gpt-4o-mini")
         except Exception as e:
-            logger.warning("Failed to initialize OpenAI client: %s. Falling back to Mock.", e)
+            logger.warning("Failed to initialize OpenAI client: %s.", e)
 
-    logger.info("No active API keys found for Gemini or OpenAI. Using MockLLMClient.")
+    logger.info("No active API keys found for Groq, OpenRouter, Gemini, or OpenAI. Using MockLLMClient.")
     return MockLLMClient()

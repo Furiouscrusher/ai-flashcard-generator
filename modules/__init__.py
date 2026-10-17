@@ -32,8 +32,10 @@ from modules.prompts import (
 from modules.llm_client import (
     BaseLLMClient,
     GeminiLLMClient,
+    GroqLLMClient,
     MockLLMClient,
     OpenAILLMClient,
+    OpenRouterLLMClient,
     extract_json_from_response,
     get_llm_client,
 )
@@ -66,6 +68,8 @@ __all__ = [
     # Member 2 LLM Integration
     "BaseLLMClient",
     "GeminiLLMClient",
+    "GroqLLMClient",
+    "OpenRouterLLMClient",
     "OpenAILLMClient",
     "MockLLMClient",
     "get_llm_client",
