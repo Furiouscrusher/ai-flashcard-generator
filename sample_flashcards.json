@@ -1,0 +1,71 @@
+{
+  "topic": "Cell Structure and Mitochondria",
+  "difficulty": "Mixed",
+  "flashcards": [
+    {
+      "question": "According to the source, what does the text explain about CELL: THE UNIT OF?",
+      "answer": "CELL: THE UNIT OF LIFE\n97\nmembrane-bound structure with the outer membrane and the inner\nmembrane dividing its lumen distinctly into two aqueous compartments,\ni.e., the outer compartment and the inner compartment.",
+      "difficulty": "Easy",
+      "topic": "Cell Structure and Mitochondria",
+      "source": "unit3.pdf (Page 13)",
+      "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p13_c1"
+      ]
+    },
+    {
+      "question": "According to the source, what does the text explain about The endomembrane system include?",
+      "answer": "The\nendomembrane system include endoplasmic\nreticulum (ER), golgi complex, lysosomes and\nvacuoles.",
+      "difficulty": "Medium",
+      "topic": "Cell Structure and Mitochondria",
+      "source": "unit3.pdf (Page 11)",
+      "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p11_c1"
+      ]
+    },
+    {
+      "question": "According to the source, what does the text explain about Various chemical reactions occur?",
+      "answer": "Various\nchemical reactions occur in it to keep the cell in the \u2018living state\u2019.",
+      "difficulty": "Hard",
+      "topic": "Cell Structure and Mitochondria",
+      "source": "unit3.pdf (Page 4)",
+      "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p4_c3"
+      ]
+    },
+    {
+      "question": "According to the source, what does the text explain about In animal cells, centrioles?",
+      "answer": "In animal cells,\ncentrioles also form spindle apparatus during cell division.",
+      "difficulty": "Easy",
+      "topic": "Cell Structure and Mitochondria",
+      "source": "unit3.pdf (Page 18)",
+      "source_chunk_ids": [
+        "unit3_6771c5ae1d64_p18_c2"
+      ]
+    }
+  ],
+  "metadata": {
+    "retrieved_chunks_count": 4,
+    "chunks_used": [
+      "unit3_6771c5ae1d64_p13_c1",
+      "unit3_6771c5ae1d64_p11_c1",
+      "unit3_6771c5ae1d64_p4_c3",
+      "unit3_6771c5ae1d64_p18_c2"
+    ],
+    "llm_provider": "MockLLMClient",
+    "relevance_report": {
+      "is_relevant": true,
+      "average_relevance": 0.631,
+      "grounded_count": 4,
+      "total_cards": 4,
+      "scores": [
+        0.741,
+        0.611,
+        0.562,
+        0.611
+      ]
+    },
+    "source_documents": [
+      "unit3.pdf"
+    ]
+  }
+}
