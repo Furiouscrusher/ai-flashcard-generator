@@ -1,1 +1,12 @@
-PyMuPDF
+# AI Flashcard Generator Using RAG - Project Dependencies
+
+# Member 1: Document Processing and Data Preparation
+PyMuPDF>=1.24.0
+
+# Member 2: Vector Database, Embeddings, RAG & LLM Integration
+pydantic>=2.7.0
+python-dotenv>=1.0.0
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+google-genai>=0.1.0
+openai>=1.20.0
