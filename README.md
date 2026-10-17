@@ -17,9 +17,11 @@ An AI-powered active recall flashcard generation application that converts uploa
 - **Vector Database**: ChromaDB vector store with in-memory ephemeral and persistent storage support.
 - **Semantic Search**: Top-k similarity retrieval with cosine distance scoring and metadata filtering (`document_id`).
 - **LLM Multi-Provider Integration**:
-  - Google Gemini API (`gemini-2.5-flash` / `gemini-1.5-flash`) via `google-genai`.
-  - OpenAI API (`gpt-4o-mini` / `gpt-3.5-turbo`) via `openai`.
-  - Offline Mock LLM provider (`MockLLMClient`) allowing full offline testing and grading without API keys.
+  - **Groq API** (`llama-3.3-70b-versatile` / `llama-3.1-8b-instant`) via `GROQ_API_KEY` (ultra-fast inference & generous free tier).
+  - **OpenRouter API** (`meta-llama/llama-3.3-70b-instruct`, `deepseek/deepseek-chat`) via `OPENROUTER_API_KEY`.
+  - **Google Gemini API** (`gemini-2.5-flash` / `gemini-1.5-flash`) via `google-genai`.
+  - **OpenAI API** (`gpt-4o-mini` / `gpt-3.5-turbo`) via `openai`.
+  - **Offline Mock LLM provider** (`MockLLMClient`) allowing full offline testing and grading without API keys.
 - **Prompt Engineering**: Bloom's taxonomy calibrated difficulty prompts, strict context grounding, source citation enforcement, and structured JSON output.
 - **Validation & Pydantic**: Robust schemas (`Flashcard`, `FlashcardSet`, `GenerationRequest`, `RetrievedChunk`).
 - **Deduplication**: Intelligent normalized question deduplication.

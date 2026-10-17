@@ -259,6 +259,18 @@ Hope this helps!
         with self.assertRaises(FlashcardGenerationError):
             generate_flashcards(req, empty_store)
 
+    def test_groq_and_openrouter_client_factories(self):
+        """Test Groq and OpenRouter client initialization via factory."""
+        from modules.llm_client import GroqLLMClient, OpenRouterLLMClient, get_llm_client
+
+        groq_client = get_llm_client(provider="groq", api_key="gsk_dummy_test_key")
+        self.assertIsInstance(groq_client, GroqLLMClient)
+        self.assertEqual(str(groq_client.client.base_url), "https://api.groq.com/openai/v1/")
+
+        openrouter_client = get_llm_client(provider="openrouter", api_key="sk_or_dummy_test_key")
+        self.assertIsInstance(openrouter_client, OpenRouterLLMClient)
+        self.assertEqual(str(openrouter_client.client.base_url), "https://openrouter.ai/api/v1/")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
